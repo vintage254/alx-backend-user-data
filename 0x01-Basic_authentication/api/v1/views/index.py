@@ -29,6 +29,15 @@ def stats() -> str:
 def unauthorized() -> str:
     """ GET /api/v1/unauthorized
     Return:
-      - Aborts with a 401 error
+      - the error handler for 401 will be executed
     """
     abort(401)
+
+
+@app_views.route('/forbidden', methods=['GET'], strict_slashes=False)
+def forbidden() -> str:
+    """ GET /api/v1/unauthorized
+    Return:
+      - the error handler for 401 will be executed
+    """
+    abort(403)
