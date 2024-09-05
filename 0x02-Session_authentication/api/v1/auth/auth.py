@@ -3,7 +3,7 @@
 """
 from flask import request
 from typing import List, TypeVar
-
+from os import getenv
 
 class Auth():
     """ manages the API authentication"""
@@ -27,3 +27,6 @@ class Auth():
     def current_user(self, request=None) -> TypeVar('User'):
         """ current user method"""
         return None
+    def session_cookie(self, request=None):
+        if request:
+            return request.cookies.get(getenv('SESSION_NAME'))
