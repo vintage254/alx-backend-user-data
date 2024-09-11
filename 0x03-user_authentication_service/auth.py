@@ -97,12 +97,12 @@ class Auth:
             str: user email
         """
         if session_id is None:
-            return
+            return None
         try:
             user = self._db.find_user_by(session_id=session_id)
-            return user.email
+            return user
         except NoResultFound:
-            return
+            return None
 
     def destroy_session(self, user_id: int) -> None:
         """destroy session
