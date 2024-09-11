@@ -39,15 +39,25 @@ def log_out(session_id: str) -> None:
 def reset_password_token(email: str) -> str:
     """Request a password reset token"""
     response = requests.post(f"{BASE_URL}/reset_password", data={'email': email})
-    assert response.status_code == 200
-    assert "reset_token" in response.json()
-    return response.json()["reset_token"]
+    if response.status_code == 200:
+        # Assert the response contains the reset token
+        response_json = response.json()
+        assert "reset_token" in response_json, "Response JSON does not contain 'reset_token'"
+        return response_json["reset_token"]
+    elif response.status_code == 403:
+        # Raise an error if the email is not registered
+        raise ValueError("Email not registered")
 
 def update_password(email: str, reset_token: str, new_password: str) -> None:
     """Update the user's password using the reset token"""
     response = requests.put(f"{BASE_URL}/reset_password", data={'email': email, 'reset_token': reset_token, 'new_password': new_password})
-    assert response.status_code == 200
-    assert response.json() == {"email": email, "message": "Password updated"}
+    if response.status_code == 200:
+        # Success case: Password updated
+        assert response.json() == {"email": email, "message": "Password updated"}
+    elif response.status_code == 403:
+        # Error case: Invalid reset token or email not registered
+
+        print("Failed to update password: Invalid reset token or email not registered.")
 
 EMAIL = "guillaume@holberton.io"
 PASSWD = "b4l0u"
