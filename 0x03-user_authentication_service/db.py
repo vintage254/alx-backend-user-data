@@ -10,6 +10,8 @@ from sqlalchemy.exc import InvalidRequestError
 from typing import TypeVar
 from user import Base, User
 
+DATA = {'email', 'hashed_password', 'session_id', 'reset_token'}
+
 class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
@@ -27,7 +29,7 @@ class DB:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
         return self.__session
-    
+
     def add_user(self, email: str, hashed_password: str) -> User:
         """add user to database
 
@@ -62,7 +64,6 @@ class DB:
         Args:
             user_id (int): id of user
         """
-        DATA = {'email', 'hashed_password', 'session_id', 'reset_token'}
         user = self.find_user_by(id=user_id)
         for key, val in kwargs.items():
             if key not in DATA:
